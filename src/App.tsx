@@ -86,13 +86,16 @@ export const App: React.FC = () => {
                   <i className="fas fa-search" aria-hidden="true" />
                 </span>
 
-                <span className="icon is-right">
-                  {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
-                  <button
-                    type="button"
-                    className="delete"
-                  />
-                </span>
+                {query && (
+                  <span className="icon is-right">
+                    {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
+                    <button
+                      type="button"
+                      className="delete"
+                      onClick={() => setQuery('')}
+                    />
+                  </span>
+                )}
               </p>
             </div>
 

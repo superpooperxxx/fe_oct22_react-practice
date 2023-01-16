@@ -39,6 +39,11 @@ export const App: React.FC = () => {
       ));
   }
 
+  const handleClearFilters = () => {
+    setSelectedUserId(0);
+    setQuery('');
+  };
+
   return (
     <div className="section">
       <div className="container">
@@ -145,7 +150,7 @@ export const App: React.FC = () => {
               <a
                 href="#/"
                 className="button is-link is-outlined is-fullwidth"
-
+                onClick={handleClearFilters}
               >
                 Reset all filters
               </a>

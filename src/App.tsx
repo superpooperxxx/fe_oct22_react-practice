@@ -25,19 +25,18 @@ export const App: React.FC = () => {
   const [selectedUserId, setSelectedUserId] = useState(0);
   const [query, setQuery] = useState('');
 
-  let visiblePhotos = photos;
+  const visiblePhotos = photos.filter(photo => {
+    const queryPrepared = query.toLowerCase().trim();
+    const photoTitle = photo.title.toLowerCase();
 
-  if (selectedUserId !== 0) {
-    visiblePhotos = visiblePhotos
-      .filter(photo => selectedUserId === photo.user?.id);
-  }
+    const isQueryMatched = photoTitle.includes(queryPrepared);
 
-  if (query !== '') {
-    visiblePhotos = visiblePhotos
-      .filter(photo => (
-        photo.title.toLowerCase().includes(query.toLowerCase().trim())
-      ));
-  }
+    const isSelectedUserMatched = selectedUserId !== 0
+      ? selectedUserId === photo.user?.id
+      : true;
+
+    return isQueryMatched && isSelectedUserMatched;
+  });
 
   const handleClearFilters = () => {
     setSelectedUserId(0);

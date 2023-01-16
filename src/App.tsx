@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import cn from 'classnames';
 import './App.scss';
 
@@ -21,6 +21,24 @@ const photosFull: PhotosFull[] = photosFromServer.map(photo => {
 });
 
 export const App: React.FC = () => {
+  const [photos] = useState(photosFull);
+  const [selectedUserId, setSelectedUserId] = useState(0);
+  const [query, setQuery] = useState('');
+
+  let visiblePhotos = photos;
+
+  if (selectedUserId !== 0) {
+    visiblePhotos = visiblePhotos
+      .filter(photo => selectedUserId === photo.user?.id);
+  }
+
+  if (query !== '') {
+    visiblePhotos = visiblePhotos
+      .filter(photo => (
+        photo.title.toLowerCase().includes(query.toLowerCase().trim())
+      ));
+  }
+
   return (
     <div className="section">
       <div className="container">
@@ -33,28 +51,25 @@ export const App: React.FC = () => {
             <p className="panel-tabs has-text-weight-bold">
               <a
                 href="#/"
+                onClick={() => setSelectedUserId(0)}
+                className={cn({
+                  'is-active': !selectedUserId,
+                })}
               >
                 All
               </a>
-
-              <a
-                href="#/"
-              >
-                User 1
-              </a>
-
-              <a
-                href="#/"
-                className="is-active"
-              >
-                User 2
-              </a>
-
-              <a
-                href="#/"
-              >
-                User 3
-              </a>
+              {usersFromServer.map(user => (
+                <a
+                  href="#/"
+                  key={user.id}
+                  onClick={() => setSelectedUserId(user.id)}
+                  className={cn({
+                    'is-active': selectedUserId === user.id,
+                  })}
+                >
+                  { user.name }
+                </a>
+              ))}
             </p>
 
             <div className="panel-block">
@@ -63,7 +78,8 @@ export const App: React.FC = () => {
                   type="text"
                   className="input"
                   placeholder="Search"
-                  value="qwe"
+                  value={query}
+                  onChange={event => setQuery(event.target.value)}
                 />
 
                 <span className="icon is-left">
@@ -195,7 +211,7 @@ export const App: React.FC = () => {
             </thead>
 
             <tbody>
-              {photosFull.map(photo => (
+              {visiblePhotos.map(photo => (
                 <tr key={photo.id}>
                   <td className="has-text-weight-bold">
                     { photo.id }
